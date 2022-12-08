@@ -185,19 +185,29 @@ def build_tree(path):
             actualdirectory.addchild(tmp)
     return root
 
-def day7_part1(path):
+
+def day7_part12(path):
     b = True
     size = 0
     root = build_tree(path)
+    neededspace = 389918
+    directoriesforupdate = []
     actualdirectory = root
     while b:
         if not actualdirectory.hasdirchildren():
             actualdirectory.refreshvalue()
             if actualdirectory.getvalue() <= 100000:
                 size += actualdirectory.getvalue()
+            elif actualdirectory.getvalue() >= neededspace:
+                directoriesforupdate.append(actualdirectory.getvalue())
             if actualdirectory.getparent() == 'none':
                 print(size)
-                return root
+                space = 70000000
+                for i in directoriesforupdate:
+                    if i < space:
+                        space = i
+                print(space)
+                return
             actualdirectory = actualdirectory.getparent()
         else:
             for i in actualdirectory.children:
@@ -205,11 +215,20 @@ def day7_part1(path):
                     actualdirectory = i
                     break
 
-def day7_part2(path):
-    root = day7_part1(path)
+
+def treehouse_part1(path):
+    f = open(path, 'r')
+    matrix = []
+    for x in f:
+        column = []
+        matrix.append(column)
+        for c in x:
+            if not c == '\n':
+                column.append(c)
+
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    day7_part1("C:\\Users\\svenk\\Desktop\\tree.txt")
+    day7_part12("C:\\Users\\svekr\\Desktop\\tree.txt")
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
