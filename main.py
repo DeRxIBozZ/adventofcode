@@ -126,10 +126,12 @@ class TreeElement:
 
     def refreshvalue(self):
         for x in self.children:
-            self.value = self.value + x.value
+            self.value = self.value + int(x.value)
 
     def getchild(self, name):
-        return self.children[name]
+        for i in self.children:
+            if i.name == name:
+                return i
 
     def getparent(self):
         return self.parent
@@ -140,37 +142,74 @@ class TreeElement:
     def addchild(self, child):
         self.children.append(child)
 
+    def hasdirchildren(self):
+        b = False
+        for i in self.children:
+            if i.getvalue() == 0:
+                b = True
+        return b
 
-def day7_tree(path):
+    def childsize(self, size):
+        child = []
+        for i in self.children:
+            if i.getvalue >= size:
+                child.append(i)
+        return child
+
+    def print(self):
+        childnames = []
+        for i in self.children:
+            childnames.append(i.name)
+        print(f'{self.name} : {childnames}')
+
+def build_tree(path):
     f = open(path, 'r')
-    root = TreeElement(0, 'none')
+    root = TreeElement(0, 'none', '/')
     actualdirectory = root
     for x in f:
         parts = x.split(' ')
         if parts[0] == '$':
             if parts[1] == 'cd':
-                if parts[2] == '/':
+                if parts[2] == '/\n':
                     actualdirectory = root
-                elif parts[2] == '..':
+                elif parts[2] == '..\n':
                     actualdirectory = actualdirectory.getparent()
                 else:
+                    parts[2].replace('\n', '')
                     actualdirectory = actualdirectory.getchild(parts[2])
         elif parts[0] == 'dir':
             tmp = TreeElement(0, actualdirectory, parts[1])
             actualdirectory.addchild(tmp)
         else:
-            tmp = TreeElement(parts[0], parts[1], 'file')
+            tmp = TreeElement(parts[0], actualdirectory, parts[1])
             actualdirectory.addchild(tmp)
+    return root
+
+def day7_part1(path):
     b = True
-    count = 0
+    size = 0
+    root = build_tree(path)
     actualdirectory = root
     while b:
+        if not actualdirectory.hasdirchildren():
+            actualdirectory.refreshvalue()
+            if actualdirectory.getvalue() <= 100000:
+                size += actualdirectory.getvalue()
+            if actualdirectory.getparent() == 'none':
+                print(size)
+                return root
+            actualdirectory = actualdirectory.getparent()
+        else:
+            for i in actualdirectory.children:
+                if i.getvalue() == 0:
+                    actualdirectory = i
+                    break
 
-
-
+def day7_part2(path):
+    root = day7_part1(path)
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    rucksack_reorganisation_part2("C:\\Users\\svekr\\Desktop\\rucksack.txt")
+    day7_part1("C:\\Users\\svenk\\Desktop\\tree.txt")
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
