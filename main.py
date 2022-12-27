@@ -225,10 +225,59 @@ def treehouse_part1(path):
         for c in x:
             if not c == '\n':
                 column.append(c)
+    count = 0
+    print(matrix)
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            i1 = 0
+            j1 = 0
+            invisible = True
+            condition = True
+            while i1 < i and condition:
+                if matrix[i1][j] >= matrix[i][j]:
+                    condition = False
+                if i1 + 1 == i:
+                    count += 1
+                    invisible = False
+                    print(f'[{i}][{j}] visible oben')
+                i1 += 1
+            i1 = i + 1
+            condition = True
+            while i1 < len(matrix) and condition and invisible:
+                if matrix[i1][j] >= matrix[i][j]:
+                    condition = False
+                if i1 == len(matrix) - 1:
+                    count += 1
+                    invisible = False
+                    print(f'[{i}][{j}] visible unten')
+                i1 += 1
+            condition = True
+            while j1 < j and condition and invisible:
+                if matrix[i][j1] >= matrix[i][j]:
+                    condition = False
+                if j1 + 1 == j:
+                    count += 1
+                    invisible = False
+                    print(f'[{i}][{j}] visible links')
+                j1 += 1
+            condition = True
+            j1 = j + 1
+            while j1 < len(matrix[i]) and condition and invisible:
+                if matrix[i][j1] >= matrix[i][j]:
+                    condition = False
+                if j1 == len(matrix[i]) - 1:
+                    count += 1
+                    invisible = False
+                    print(f'[{i}][{j}] visible rechts')
+                j1 += 1
+            if (i == 0 or i == len(matrix) - 1 or j == 0 or j == len(matrix[i]) - 1) and invisible:
+                count += 1
+                print(f'[{i}][{j}] visible')
+    print(count)
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    day7_part12("C:\\Users\\svekr\\Desktop\\tree.txt")
+    treehouse_part1("C:\\Users\\Sven\\Desktop\\day8example.txt")
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
